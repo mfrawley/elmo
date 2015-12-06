@@ -1,0 +1,39 @@
+body {
+  font-family: 'Lato', sans-serif;
+}
+h1, h2, h3, h4 {
+  font-family: 'Lobster', sans-serif;
+}
+
+@media only screen 
+and (min-device-width: 320px) 
+and (max-device-width: 736px) 
+{
+  
+}
+
+.innerContent {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2em;  
+}
+.inline {
+  display:inline;
+}
+.body {
+  border-radius: 8px;
+  background-color: rgba(255,255,255,0.9);
+  margin: 1em;
+  padding: 1em;
+}
+nav {
+  float: right;
+  margin-right: 2em;
+}
+nav a {
+  color: rgba(0,0,0,0.9);
+}
+.navWrapper {
+  padding: 1em;
+  background-color: rgba(255,255,255,0.9);
+}

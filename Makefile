@@ -1,16 +1,16 @@
-all: clean copyhtml copyimages elmcompile 
-
-copyimages: 
-	cp *.jpg build/ 
+all: clean copyhtml copycss elmcompile 
 
 copyhtml: 
 	cp index.html build/ 
 
-build/elm.js : cv.elm styles.elm
+copycss: 
+	cp index.css build/ 
+
+build/elm.js : modules.elm
 	elm-make --output $@ $<
 
 elmcompile : build/elm.js 
 
 
 clean: 
-
+	rm -rf build/*.*
