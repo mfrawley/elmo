@@ -9,9 +9,13 @@
   <body>
     <div id="content"></div>
     <script type="text/javascript">
-//var contentDiv = document.getElementById('content');
-//Elm.embed(Elm.Modules, contentDiv);
-Elm.worker(Elm.Modules);
+var contentDiv = document.getElementById('content');
+myapp = Elm.worker(Elm.Modules);
+//var myapp = Elm.worker(Elm.Modules);
+
+myapp.ports.renderPort.subscribe(function (html) {
+  console.log("JS" + html);
+});
     </script>
   </body>
 </html>
