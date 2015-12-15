@@ -9,29 +9,29 @@ import Html.Attributes exposing (class, style, href)
 type HeadingType = H1 | H2 | H3
 
 type alias HeadingPayload = 
-  { h : HeadingType
+  { h : Int 
   , header : String   
   }
 
 model : HeadingPayload
 model = 
-  { h = H1
+  { h = 1
   , header = ""
   }
 
-heading : String -> HeadingType -> String 
+heading : String -> Int -> String 
 heading innerText hType = 
   case hType of
-    H1 ->
+    1 ->
       "<h1>" ++ innerText ++ "</h1>" 
-    H2 ->
+    2 ->
       "<h1>" ++ innerText ++ "</h2>"
-    H3 ->
+    3 ->
       "<h1>" ++ innerText ++ "</h3>"
 
 renderHtml: String 
 renderHtml =
-     heading "blah" H1
+     heading "blah" 1
 
 htmlToElement : String -> Element
 htmlToElement str =
@@ -39,12 +39,13 @@ htmlToElement str =
 
 port handleSaveAction : Signal String 
 port handleSaveAction =
-  saveModule model
-  "" 
+  let blah = saveModule 
+  in
+  constant ""
 
 port saveModule : Signal HeadingPayload 
 port saveModule = 
-  model
+  constant model 
 
 port renderPort : Signal String
 port renderPort = 

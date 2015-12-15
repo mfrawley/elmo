@@ -1,0 +1,49 @@
+body {
+  background-color: #404040;
+}
+
+input[type=text] {
+  outline: none;
+  /*outline-width: thin;*/
+  border-radius: 0;
+  border: none;
+  padding:10px;
+  background-color: dimgray;
+  line-height: 28px;
+  font-size: 24px;
+  font-family: "Brandon"
+  height:50px;
+  width:100%;
+  color: white;
+}
+form {
+  padding: 15px 10px;
+  min-height: 50%;
+}
+#module-preview {
+  margin: 0 0 10px 0;
+  /*margin: 10px 10px;*/
+  min-height: 200px;
+  background-color: white;
+}
+button {
+  background-color: #595959;
+  margin: 0;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.editor-group {
+  margin: 10 auto;
+  padding-top:10px;
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-active {
+  background-color: #1ba9e1;
+}
