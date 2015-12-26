@@ -1,10 +1,11 @@
 module CallToAction where
 
-import Html exposing (div, button, text, a, input, form)
-import Html.Attributes exposing (class, id, contenteditable, href, type', name, autofocus, placeholder, autocomplete, value)
+import Html exposing (div, button, text, a, input, form, span)
+import Html.Attributes exposing (class, id, contenteditable, href, type', name, autofocus, placeholder, autocomplete, value, attribute)
 import Html.Events exposing (onClick, targetValue, on)
 import Signal exposing (Signal, Address)
 import StartApp.Simple as StartApp
+import Tabs as Tabs
 
 type ButtonStyle = Style1 | Style2 | Style3
 
@@ -33,7 +34,7 @@ model = {
 view address model =
   div [] [
   preview model
-  , callToActionForm address model.title
+  , callToActionForm address model
   ]
 
 preview : ButtonModel -> Html.Html
@@ -50,10 +51,11 @@ preview model =
     ]
   ]
 
-callToActionForm : Address Action -> String -> Html.Html
-callToActionForm address val =
+callToActionForm : Address Action -> ButtonModel -> Html.Html
+callToActionForm address model =
   form [] [
-    titleField address val
+    titleField address model.title 
+    , styleTabs address model.buttonStyle
   ]
 
 titleField : Address Action -> String -> Html.Html
@@ -65,6 +67,21 @@ titleField address title =
   , value title
   , on "input" targetValue (Signal.message address << UpdateTitle)] []
 
+
+styleTabs : Address Action -> Int -> Html.Html
+styleTabs address style =
+  let titles = [("1", "Style 1", True), ("2", "Style 2", False), ("3", "Style 3", False)]
+  in
+  div [class "editor-group"] (List.map renderTabButton titles) 
+    
+
+renderTabButton : (String, String, Bool) -> Html.Html
+renderTabButton (val, desc, active) =
+  let cssClass = if (active == True) then "btn btn-sm btn-text btn-active" else "btn btn-sm btn-text" 
+  in
+  button [type' "button", (attribute "data-action" "style"), (attribute "data-params" val), class cssClass] [
+    span [class "btn-text-content"] [text desc] 
+    ]
 
 type Action
   = UpdateTitle String

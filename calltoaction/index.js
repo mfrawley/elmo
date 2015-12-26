@@ -301,13 +301,59 @@ Elm.CallToAction.make = function (_elm) {
                    ,buttonStyle: model.buttonStyle
                    ,title: action._0};}
          _U.badCase($moduleName,
-         "between lines 74 and 80");
+         "between lines 90 and 96");
       }();
    });
    var UpdateTitle = function (a) {
       return {ctor: "UpdateTitle"
              ,_0: a};
    };
+   var renderTabButton = function (_v2) {
+      return function () {
+         switch (_v2.ctor)
+         {case "_Tuple3":
+            return function () {
+                 var cssClass = _U.eq(_v2._2,
+                 true) ? "btn btn-sm btn-text btn-active" : "btn btn-sm btn-text";
+                 return A2($Html.button,
+                 _L.fromArray([$Html$Attributes.type$("button")
+                              ,A2($Html$Attributes.attribute,
+                              "data-action",
+                              "style")
+                              ,A2($Html$Attributes.attribute,
+                              "data-params",
+                              _v2._0)
+                              ,$Html$Attributes.$class(cssClass)]),
+                 _L.fromArray([A2($Html.span,
+                 _L.fromArray([$Html$Attributes.$class("btn-text-content")]),
+                 _L.fromArray([$Html.text(_v2._1)]))]));
+              }();}
+         _U.badCase($moduleName,
+         "between lines 79 and 83");
+      }();
+   };
+   var styleTabs = F2(function (address,
+   style) {
+      return function () {
+         var titles = _L.fromArray([{ctor: "_Tuple3"
+                                    ,_0: "1"
+                                    ,_1: "Style 1"
+                                    ,_2: true}
+                                   ,{ctor: "_Tuple3"
+                                    ,_0: "2"
+                                    ,_1: "Style 2"
+                                    ,_2: false}
+                                   ,{ctor: "_Tuple3"
+                                    ,_0: "3"
+                                    ,_1: "Style 3"
+                                    ,_2: false}]);
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("editor-group")]),
+         A2($List.map,
+         renderTabButton,
+         titles));
+      }();
+   });
    var titleField = F2(function (address,
    title) {
       return A2($Html.input,
@@ -326,12 +372,15 @@ Elm.CallToAction.make = function (_elm) {
       _L.fromArray([]));
    });
    var callToActionForm = F2(function (address,
-   val) {
+   model) {
       return A2($Html.form,
       _L.fromArray([]),
       _L.fromArray([A2(titleField,
-      address,
-      val)]));
+                   address,
+                   model.title)
+                   ,A2(styleTabs,
+                   address,
+                   model.buttonStyle)]));
    });
    var model = {_: {}
                ,buttonAlign: 2
@@ -384,7 +433,7 @@ Elm.CallToAction.make = function (_elm) {
       _L.fromArray([preview(model)
                    ,A2(callToActionForm,
                    address,
-                   model.title)]));
+                   model)]));
    });
    var main = $StartApp$Simple.start({_: {}
                                      ,model: model
@@ -404,6 +453,8 @@ Elm.CallToAction.make = function (_elm) {
                               ,preview: preview
                               ,callToActionForm: callToActionForm
                               ,titleField: titleField
+                              ,styleTabs: styleTabs
+                              ,renderTabButton: renderTabButton
                               ,UpdateTitle: UpdateTitle
                               ,update: update
                               ,main: main};
