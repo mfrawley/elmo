@@ -4,42 +4,56 @@ import Html.Attributes exposing (class, id, contenteditable, href, type', name, 
 import Html.Events exposing (onClick, targetValue, on)
 import Signal exposing (Signal, Address)
 
-type Action = 
-  SelectItem
+type Action =
+  SelectIndex Int
 
-type alias Model = 
-  {
-    selectedIndex : Int
-    , tabTitles : List String
-    , tabValues : List String
-    , cssClasses : List String
+type alias TabInfo =
+  { title : String
+  , value : String
+  , buttonClass : String
+  , titleClass : String
+  , active : Bool
   }
 
-init : Int -> Model
-init selected values descriptions = 
-    { selectedIndex = selected
-    , tabValues = values
-    , tabTitles = descriptions
-    }
+createTabInfo : Bool -> String -> String -> String -> String -> TabInfo
+createTabInfo active title value buttonClass titleClass =
+  { active = active
+  , title = title
+  , value = value
+  , buttonClass = buttonClass
+  , titleClass = titleClass
+  }
 
+type alias Model =
+  {
+    selectedIndex : Int
+    , info : List TabInfo
+  }
+
+init : Int -> List TabInfo -> Model
+init idx info =
+    { selectedIndex = idx
+    , info = info
+    }
 
 isSelected : Int -> Model -> Bool
 isSelected idx model =
   model.selectedIndex == idx
 
+update : Action -> Model -> Int -> Model
+update action model newSelectedIndex =
+  { model |
+    selectedIndex <- newSelectedIndex
+  }
+
 view : Address Action -> Model -> Html.Html
 view address model =
-  let tabData = List.indexedMap (\idx -> ( model.tabValues[idx]
-  , model.tabTitles[idx]
-  , model.cssClasses[idx]
-  , (isSelected idx model)))
-  in
-  div [class "editor-group"] (List.map renderTabButton tabData)
+  div [class "editor-group"] (List.map renderTabButton model.info)
 
-renderTabButton : (String, String, String, Bool) -> Html.Html
-renderTabButton (val, desc, cssClass, active) =
-  let cssClass = if (active == True) then cssClass ++ " btn-active" else cssClass
+renderTabButton : TabInfo -> Html.Html
+renderTabButton info =
+  let cssClass = if (info.active == True) then info.buttonClass ++ " btn-active" else info.buttonClass
   in
-  button [type' "button", (attribute "data-params" val), class cssClass] [
-    span [class "btn-text-content"] [text desc] 
+  button [type' "button", (attribute "data-params" info.value), class info.buttonClass] [
+    span [class info.titleClass] [text info.title]
   ]
