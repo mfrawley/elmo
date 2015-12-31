@@ -4,8 +4,10 @@ import Html.Attributes exposing (class, id, contenteditable, href, type', name, 
 import Html.Events exposing (onClick, targetValue, on)
 import Signal exposing (Signal, Address)
 
-type Action =
-  SelectIndex Int
+type alias Idx = Int
+
+type SelectAction =
+  SelectIndex Idx
 
 type alias TabInfo =
   { title : String
@@ -13,15 +15,17 @@ type alias TabInfo =
   , buttonClass : String
   , titleClass : String
   , active : Bool
+  , idx : Int
   }
 
-createTabInfo : Bool -> String -> String -> String -> String -> TabInfo
-createTabInfo active title value buttonClass titleClass =
+createTabInfo : Bool -> String -> String -> String -> String -> Int -> TabInfo
+createTabInfo active title value buttonClass titleClass idx =
   { active = active
   , title = title
   , value = value
   , buttonClass = buttonClass
   , titleClass = titleClass
+  , idx = idx
   }
 
 type alias Model =
@@ -40,20 +44,20 @@ isSelected : Int -> Model -> Bool
 isSelected idx model =
   model.selectedIndex == idx
 
-update : Action -> Model -> Int -> Model
+update : SelectAction -> Model -> Int -> Model
 update action model newSelectedIndex =
   { model |
     selectedIndex <- newSelectedIndex
   }
 
-view : Address Action -> Model -> Html.Html
+view : Address SelectAction -> Model -> Html.Html
 view address model =
-  div [class "editor-group"] (List.map renderTabButton model.info)
+  div [class "editor-group"] (List.map (\info -> renderTabButton info address) model.info)
 
-renderTabButton : TabInfo -> Html.Html
-renderTabButton info =
+renderTabButton : TabInfo -> Address SelectAction -> Html.Html
+renderTabButton info address =
   let cssClass = if (info.active == True) then info.buttonClass ++ " btn-active" else info.buttonClass
   in
-  button [type' "button", (attribute "data-params" info.value), class info.buttonClass] [
+  button [type' "button", (attribute "data-params" info.value), class info.buttonClass, (onClick address (SelectIndex info.idx))] [
     span [class info.titleClass] [text info.title]
   ]

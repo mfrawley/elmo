@@ -7,24 +7,27 @@ import Signal exposing (Signal, Address)
 import StartApp.Simple as StartApp
 import Tabs as Tabs
 import AlignTabs as AlignTabs
+import Debug as Debug
 
 type ButtonStyle = Style1 | Style2 | Style3
 
-type Action = UpdateTitle String | SelectStyle Tabs.Action CallToActionModel Int
+type Action
+  = UpdateTitle String
+  | SelectStyle Tabs.Idx Tabs.SelectAction
 
 type alias CallToActionModel =
-    { styleTabs : Tabs.Model
-    , alignTabs : Tabs.Model
+    { styleTabsModel : Tabs.Model
+    , alignTabsModel : Tabs.Model
     , buttonHref : String
     , title : String
   }
 
-init : String -> String -> Int -> Int -> CallToActionModel
-init text href selectedStyle selectedAlign =
+init : String -> String -> CallToActionModel
+init title href =
   {
-    styleTabs = (Tabs.init 1 AlignTabs.createTabInfo)
-  , alignTabs = (Tabs.init 1 AlignTabs.createTabInfo)
-  , title = text
+    styleTabsModel = (Tabs.init 1 AlignTabs.createTabInfo)
+  , alignTabsModel = (Tabs.init 1 AlignTabs.createTabInfo)
+  , title = title
   , buttonHref = href
   }
 
@@ -35,6 +38,7 @@ buttonStyleToString bStyle =
     2 -> "2"
     3 -> "3"
 
+view : Address Action -> CallToActionModel -> Html.Html
 view address model =
   div [] [
   preview model
@@ -46,8 +50,8 @@ preview model =
   div [id "module-preview"] [
     div [class "jtpl-main jtpl-section cc-content-parent"] [
       div [id "cc-m-10813654799", class "j-module n j-callToAction "] [
-        div [class ("j-calltoaction-wrapper j-calltoaction-align-" ++ (toString model.alignTabs.selectedIndex))] [
-          a [class ("j-calltoaction-link j-calltoaction-link-style-" ++ (buttonStyleToString model.styleTabs.selectedIndex)), href model.buttonHref] [
+        div [class ("j-calltoaction-wrapper j-calltoaction-align-" ++ (toString model.alignTabsModel.selectedIndex))] [
+          a [class ("j-calltoaction-link j-calltoaction-link-style-" ++ (buttonStyleToString model.styleTabsModel.selectedIndex)), href model.buttonHref] [
             text model.title
           ]
         ]
@@ -59,7 +63,7 @@ callToActionForm : Address Action -> CallToActionModel -> Html.Html
 callToActionForm address model =
   form [] [
     titleField address model.title
-    , Tabs.view address model.buttonStyle
+    , Tabs.view (Signal.forwardTo address (SelectStyle 1)) model.styleTabsModel
   ]
 
 titleField : Address Action -> String -> Html.Html
@@ -78,10 +82,10 @@ update action model =
       { model |
         title <- title
       }
-    SelectStyle action model newIndex ->
+    SelectStyle idx tabsAction ->
       {  model |
-        styleTabs <- Tabs.update action model.styleTabs newIndex
+        styleTabsModel <- Tabs.update tabsAction model.styleTabsModel idx
       }
 
 main =
-  StartApp.start { model = init, view = view, update = update }
+  StartApp.start { model = (init "" ""), view = view, update = update }

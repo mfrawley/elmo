@@ -8,11 +8,10 @@ copyhtml:
 copycss: 
 	cp *.css build/ 
 
-build/elm.js : calltoaction.elm tabs.elm
+build/index.js : calltoaction.elm tabs.elm
 	elm-make --output $@ $<
 
-elmcompile : build/elm.js 
-
+elmcompile : build/index.js 
 
 clean: 
 	rm -rf build/*.*
